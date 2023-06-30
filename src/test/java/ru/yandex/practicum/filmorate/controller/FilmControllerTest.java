@@ -5,7 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -20,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class FilmControllerTest {
     private FilmController filmController;
     private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+
     @BeforeEach
     void setUp() {
         filmController = new FilmController();
@@ -159,6 +159,7 @@ class FilmControllerTest {
         );
         assertEquals("Фильм с ID = 2 не существует", exp.getMessage());
     }
+    
     @Test
     @DisplayName("Проверка валидации,если Film.id = null")
     void shouldThrowsWhenUpdatedFilmWithIdEqualNull() {

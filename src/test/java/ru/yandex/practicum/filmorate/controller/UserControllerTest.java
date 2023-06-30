@@ -17,9 +17,9 @@ import java.util.List;
 import java.util.Set;
 
 class UserControllerTest {
-
     private UserController userController;
     private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+
     @BeforeEach
     void setUp() {
         userController = new UserController();
@@ -42,6 +42,7 @@ class UserControllerTest {
                 LocalDate.of(1985, 9,2)));
         assertEquals("user1", user.getName());
     }
+
     @Test
     @DisplayName("Проверка валидации пользователя, если имя пустое")
     void shouldCreateUserIfNameIsEmpty() {

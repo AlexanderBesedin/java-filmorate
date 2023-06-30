@@ -5,7 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.yandex.practicum.filmorate.validator.IsAfterDate;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 /**
@@ -18,7 +20,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Film {
-
     private Integer id;
     @NotBlank(message = "Название фильма должно быть заполнено")
     private String name;
@@ -28,11 +29,4 @@ public class Film {
     private int duration;
     @IsAfterDate(value = "1895-12-28", message = "Дата релиза не может быть ранее 1895-12-28")
     private LocalDate releaseDate;
-
-    public Film(String name, String description, int duration, LocalDate releaseDate) { //конструктор для post-запроса
-        this.name = name;
-        this.description = description;
-        this.duration = duration;
-        this.releaseDate = releaseDate;
-    }
 }

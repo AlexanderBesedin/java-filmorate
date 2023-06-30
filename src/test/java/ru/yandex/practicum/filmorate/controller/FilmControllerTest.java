@@ -159,7 +159,7 @@ class FilmControllerTest {
         );
         assertEquals("Фильм с ID = 2 не существует", exp.getMessage());
     }
-    
+
     @Test
     @DisplayName("Проверка валидации,если Film.id = null")
     void shouldThrowsWhenUpdatedFilmWithIdEqualNull() {

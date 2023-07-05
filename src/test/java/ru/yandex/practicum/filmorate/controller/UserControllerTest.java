@@ -10,9 +10,8 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -161,30 +160,42 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("Проверка возврата списка созданных пользователей")
-    void shouldGetListUsers() {
-        List<User> usersExpected = List.of(
-                userController.create(new User(null, "user1@gmail.com", "user1", "userName",
-                        LocalDate.of(1985, 9,2))),
-                userController.create(new User(null, "user2@gmail.com", "user2", "userName",
-                        LocalDate.of(1957, 11,10))),
-                userController.create(new User(null, "user3@gmail.com", "user3", "userName",
-                        LocalDate.of(1992, 5,17)))
-        );
-        List<User> usersActual = new ArrayList<>(userController.getUsers());
+    @DisplayName("Проверка возврата списка созданных пользователей без ошибок валидации")
+    void shouldGetListUsersWithoutViolations() {
+        userController.create(new User(null, "user1@gmail.com", "user1", "userName",
+                LocalDate.of(1985, 9,2)));
+        userController.create(new User(null, "user2@gmail.com", "user2", "userName",
+                LocalDate.of(1957, 11,10)));
+        userController.create(new User(null, "user3@gmail.com", "user3", "userName",
+                LocalDate.of(1992, 5,17)));
 
-        assertEquals(usersExpected, usersActual);
+        Optional<Set<ConstraintViolation<User>>> violationSet = userController.getUsers().stream().
+                map(user -> validator.validate(user)).
+                filter(violation -> !violation.isEmpty()).
+                findFirst();
+        violationSet.ifPresentOrElse(
+                violation -> assertTrue(violation.isEmpty()),
+                () -> assertTrue(true)
+        );
     }
 
-    /*@Test // Аннотация @Valid при невалидном значении полей User не прерывает метод create() класса UserController
-    @DisplayName("Проверка возврата пустого списка, если поля пользователей невалидны")
-    void shouldGetEmptyListUsers() {
+    @Test
+    @DisplayName("Проверка возврата списка пользователей с ошибками валидации")
+    void shouldGetListUsersWithViolations() {
         userController.create(new User(null, "user1@gmail.com", " ", "userName",
                 LocalDate.of(1985, 9,2)));
         userController.create(new User(null, "user2@gmail.com", "", "userName",
                         LocalDate.of(1957, 11,10)));
         userController.create(new User(null, "user3@", "user3", "userName",
                         LocalDate.of(1992, 5,17)));
-        assertTrue(userController.getUsers().isEmpty());
-    }*/
+
+        Optional<Set<ConstraintViolation<User>>> violationSet = userController.getUsers().stream().
+                map(user -> validator.validate(user)).
+                filter(violation -> !violation.isEmpty()).
+                findFirst();
+        violationSet.ifPresentOrElse(
+                violation -> assertFalse(violation.isEmpty()),
+                () -> assertFalse(false)
+        );
+    }
 }

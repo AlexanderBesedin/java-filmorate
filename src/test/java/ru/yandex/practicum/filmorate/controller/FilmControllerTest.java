@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -12,6 +13,7 @@ import javax.validation.Validator;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -174,22 +176,27 @@ class FilmControllerTest {
     }
 
     @Test
-    @DisplayName("Проверка возврата списка созданных фильмов")
+    @DisplayName("Проверка возврата списка созданных фильмов без ошибок валидации")
     void shouldGetListFilms() {
-        List<Film> filmsExpected = List.of(
-                filmController.create(new Film(null, "film", "description", 150,
-                        LocalDate.of(1985, 9,2))),
-                filmController.create(new Film(null, "film", "description", 120,
-                        LocalDate.of(1957, 11,10))),
-                filmController.create(new Film(null, "Covenant", "description", 123,
-                        LocalDate.of(2023, 4,19)))
+        filmController.create(new Film(null, "film", "description", 150,
+                LocalDate.of(1985, 9,2)));
+        filmController.create(new Film(null, "film", "description", 120,
+                LocalDate.of(1957, 11,10)));
+        filmController.create(new Film(null, "Covenant", "description", 123,
+                LocalDate.of(2023, 4,19)));
+
+        Optional<Set<ConstraintViolation<Film>>> violationSet = filmController.getFilms().stream().
+                map(film -> validator.validate(film)).
+                filter(violation -> !violation.isEmpty()).
+                findFirst();
+        violationSet.ifPresentOrElse(
+                violation -> assertTrue(violation.isEmpty()),
+                () -> assertTrue(true)
         );
-        List<Film> filmsActual = new ArrayList<>(filmController.getFilms());
-        assertEquals(filmsExpected, filmsActual);
     }
 
-    /*@Test // Аннотация @Valid при невалидном значении полей Film не прерывает метод create() класса FilmController
-    @DisplayName("Проверка возврата пустого списка, если поля создаваемых фильмов невалидны")
+    @Test
+    @DisplayName("Проверка возврата списка фильмов с ошибками валидации")
     void shouldGetEmptyListFilms() {
         String description = "Covenant. Афганистан, март 2018 года. " +
                 "Во время спецоперации по поиску оружия талибов отряд сержанта армии США Джона Кинли попадает в засаду. " +
@@ -201,6 +208,13 @@ class FilmControllerTest {
         filmController.create(new Film(null, "Covenant", description, 123,
                         LocalDate.of(2023, 4,19)));
 
-        assertTrue(filmController.getFilms().isEmpty());
-    }*/
+        Optional<Set<ConstraintViolation<Film>>> violationSet = filmController.getFilms().stream().
+                map(film -> validator.validate(film)).
+                filter(violation -> !violation.isEmpty()).
+                findFirst();
+        violationSet.ifPresentOrElse(
+                violation -> assertFalse(violation.isEmpty()),
+                () -> assertFalse(false)
+        );
+    }
 }

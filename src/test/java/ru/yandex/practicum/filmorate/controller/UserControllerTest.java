@@ -10,8 +10,8 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import java.time.LocalDate;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -169,10 +169,10 @@ class UserControllerTest {
         userController.create(new User(null, "user3@gmail.com", "user3", "userName",
                 LocalDate.of(1992, 5,17)));
 
-        Optional<Set<ConstraintViolation<User>>> violationSet = userController.getUsers().stream().
-                map(user -> validator.validate(user)).
-                filter(violation -> !violation.isEmpty()).
-                findFirst();
+        Optional<Set<ConstraintViolation<User>>> violationSet = userController.getUsers().stream()
+                .map(user -> validator.validate(user))
+                .filter(violation -> !violation.isEmpty())
+                .findFirst();
         violationSet.ifPresentOrElse(
                 violation -> assertTrue(violation.isEmpty()),
                 () -> assertTrue(true)
@@ -185,14 +185,14 @@ class UserControllerTest {
         userController.create(new User(null, "user1@gmail.com", " ", "userName",
                 LocalDate.of(1985, 9,2)));
         userController.create(new User(null, "user2@gmail.com", "", "userName",
-                        LocalDate.of(1957, 11,10)));
+                LocalDate.of(1957, 11,10)));
         userController.create(new User(null, "user3@", "user3", "userName",
-                        LocalDate.of(1992, 5,17)));
+                LocalDate.of(1992, 5,17)));
 
-        Optional<Set<ConstraintViolation<User>>> violationSet = userController.getUsers().stream().
-                map(user -> validator.validate(user)).
-                filter(violation -> !violation.isEmpty()).
-                findFirst();
+        Optional<Set<ConstraintViolation<User>>> violationSet = userController.getUsers().stream()
+                .map(user -> validator.validate(user))
+                .filter(violation -> !violation.isEmpty())
+                .findFirst();
         violationSet.ifPresentOrElse(
                 violation -> assertFalse(violation.isEmpty()),
                 () -> assertFalse(false)

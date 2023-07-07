@@ -12,9 +12,10 @@ import java.util.stream.Collectors;
 
 @Component
 @Slf4j
-public class InMemoryFilmStorage implements FilmStorage{
+public class InMemoryFilmStorage implements FilmStorage {
     private final HashMap<Integer, Film> films = new HashMap<>();
     private Integer filmId = 1;
+
     @Override
     public Film createFilm(Film film) {
         film.setId(filmId++);

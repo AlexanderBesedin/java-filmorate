@@ -17,7 +17,7 @@ import java.util.List;
 public class FilmController {
     private final FilmService filmService;
 
-    private final static String DEFAULT_COUNT = "10";
+    private static final String DEFAULT_COUNT = "10";
 
     @PostMapping
     public Film create(@Valid @RequestBody Film film) {

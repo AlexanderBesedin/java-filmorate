@@ -161,7 +161,7 @@ class UserControllerTest {
                         new User(2, "user@gmail.com", "alex", "Alex",
                         LocalDate.of(1985, 9,2), new HashSet<>()))
         );
-        assertEquals("Невозможно обновить пользователя c ID = null", exp.getMessage());
+        assertEquals("Cannot update user with ID = null", exp.getMessage());
     }
 
     @Test
@@ -176,7 +176,7 @@ class UserControllerTest {
                         new User(null, "user@gmail.com", "alex", "Alex",
                         LocalDate.of(1985, 9,2), new HashSet<>()))
         );
-        assertEquals("Невозможно обновить пользователя c ID = null", exp.getMessage());
+        assertEquals("Cannot update user with ID = null", exp.getMessage());
     }
 
     @Test

@@ -160,7 +160,7 @@ class FilmControllerTest {
                 () ->  filmController.update(new Film(2,"film1", "description1", 150,
                         LocalDate.of(1985, 9,2), new HashSet<>()))
         );
-        assertEquals("Невозможно обновить фильм c ID = null", exp.getMessage());
+        assertEquals("Can't update film with ID = null", exp.getMessage());
     }
 
     @Test
@@ -173,7 +173,7 @@ class FilmControllerTest {
                 () ->  filmController.update(new Film(null,"film1", "description1", 150,
                         LocalDate.of(1985, 9,2), new HashSet<>()))
         );
-        assertEquals("Невозможно обновить фильм c ID = null", exp.getMessage());
+        assertEquals("Can't update film with ID = null", exp.getMessage());
     }
 
     @Test

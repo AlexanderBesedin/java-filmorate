@@ -9,7 +9,7 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
-import java.util.Collection;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -25,7 +25,7 @@ public class FilmService {
 
     public Film update(Film film) {
         if (film.getId() == null || filmStorage.getById(film.getId()) == null) {
-            throw new NotFoundException("Невозможно обновить фильм c ID = null");
+            throw new NotFoundException("Can't update film with ID = null");
         }
         log.info("Film {} has been UPDATED", film);
         return filmStorage.updateFilm(film);
@@ -36,7 +36,7 @@ public class FilmService {
         userService.getUser(userId); // метод getUser() выбросит исключение, если userId не существует
         if (film.getLikes().contains(userId)) {
             throw new AlreadyExistException(
-                    String.format("Пользователь с ID = %d уже ПОСТАВИЛ лайк фильму с ID = %d", userId, filmId));
+                    String.format("The user with ID = %d has ALREADY LIKE the film with ID = %d", userId, filmId));
         }
 
         film.getLikes().add(userId);
@@ -48,7 +48,7 @@ public class FilmService {
         userService.getUser(userId); // метод getUser() выбросит исключение, если userId не существует
         if (!film.getLikes().contains(userId)) {
             throw new NotFoundException(
-                    String.format("Пользователь с ID = %d уже УДАЛИЛ лайк фильму с ID = %d", userId, filmId));
+                    String.format("User with ID = %d has ALREADY DELETED LIKE film with ID = %d", userId, filmId));
         }
 
         film.getLikes().remove(userId);
@@ -57,38 +57,30 @@ public class FilmService {
 
     public Film getFilm(Integer id) {
         if (filmStorage.getById(id) == null) {
-            throw new NotFoundException(String.format("Фильм с ID = %d не существует", id));
+            throw new NotFoundException(String.format("Film ID = %d does not exist", id));
         }
         log.info("Get a film with ID = {}", id);
         return filmStorage.getById(id);
     }
 
-    public Collection<Film> getFilms() {
+    public List<Film> getFilms() {
         return filmStorage.getFilms();
     }
 
-    public Collection<Film> getTopFilms(Integer count) {
-        int defaultValue = 10; // Если count == null
+    public List<Film> getTopFilms(Integer count, Integer defaultValue) {
         int countFilms = filmStorage.getFilms().size();
 
-        if (count == null) {
-            if (countFilms < defaultValue) {
-                log.info("Get {} popular films", countFilms);
-                return filmStorage.getTopFilms(countFilms);
-            } else {
-                log.info("Get {} popular films", defaultValue);
-                return filmStorage.getTopFilms(defaultValue);
-            }
-        } else {
-            if (count <= 0)  {
-                throw new ValidationException("Количество фильмов должно быть положительным числом");
-            }
-            if (count > countFilms) {
-                throw new ValidationException(
-                        "Количество фильмов не может быть более " + countFilms);
-            }
-            log.info("Get {} popular films", count);
-            return filmStorage.getTopFilms(count);
+        if (count.equals(defaultValue) && count > countFilms) {
+            log.info("Get {} popular films", countFilms);
+            return filmStorage.getTopFilms(countFilms);
         }
+
+        if (count > countFilms) {
+            throw new ValidationException(
+                    "The count of films cannot be more than " + countFilms);
+        }
+
+        log.info("Get {} popular films", count);
+        return filmStorage.getTopFilms(count);
     }
 }

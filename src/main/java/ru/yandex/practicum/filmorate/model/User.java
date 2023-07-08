@@ -20,8 +20,6 @@ import java.util.Set;
 @NoArgsConstructor
 public class User {
     private Integer id;
-    @Setter(AccessLevel.NONE)
-    private Set<Integer> friends = new HashSet<>();
     @Email(message = "Некорректный формат электронной почты")
     @NotBlank(message = "Электронная почта должна быть заполнена")
     private String email;
@@ -30,5 +28,6 @@ public class User {
     private String name;
     @PastOrPresent(message = "Дата рождения не может быть в будущем")
     private LocalDate birthday;
-
+    @Setter(AccessLevel.NONE)
+    private Set<Integer> friends = new HashSet<>();
 }

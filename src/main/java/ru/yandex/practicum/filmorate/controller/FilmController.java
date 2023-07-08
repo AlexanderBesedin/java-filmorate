@@ -7,7 +7,8 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
 import javax.validation.Valid;
-import java.util.Collection;
+import javax.validation.constraints.Positive;
+import java.util.List;
 
 @RestController
 @RequestMapping("/films")
@@ -15,6 +16,8 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class FilmController {
     private final FilmService filmService;
+
+    private final static String DEFAULT_COUNT = "10";
 
     @PostMapping
     public Film create(@Valid @RequestBody Film film) {
@@ -37,7 +40,7 @@ public class FilmController {
     }
 
     @GetMapping
-    public Collection<Film> getFilms() {
+    public List<Film> getFilms() {
         return filmService.getFilms();
     }
 
@@ -47,7 +50,9 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public Collection<Film> getTopFilms(@RequestParam(value = "count", required = false) Integer count) {
-        return filmService.getTopFilms(count);
+    public List<Film> getTopFilms(
+            @Positive @RequestParam(value = "count", defaultValue = DEFAULT_COUNT) Integer count) {
+        Integer defaultValue = Integer.valueOf(DEFAULT_COUNT);
+        return filmService.getTopFilms(count, defaultValue);
     }
 }

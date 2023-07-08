@@ -32,8 +32,8 @@ class UserControllerTest {
     @DisplayName("Проверка валидации пользователя, если все поля User корректны")
     void shouldCreateUser() {
         User user = userController.create(
-                new User(null, new HashSet<>(),"user@gmail.com", "user1", "userName",
-                LocalDate.of(1985, 9,2)));
+                new User(null,"user@gmail.com", "user1", "userName",
+                LocalDate.of(1985, 9,2), new HashSet<>()));
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertTrue(violations.isEmpty());
@@ -43,8 +43,8 @@ class UserControllerTest {
     @DisplayName("Проверка валидации пользователя, если имя null")
     void shouldCreateUserIfNameIsNull() {
         User user = userController.create(
-                new User(null, new HashSet<>(), "user@gmail.com", "user1", null,
-                LocalDate.of(1985, 9,2)));
+                new User(null, "user@gmail.com", "user1", null,
+                LocalDate.of(1985, 9,2), new HashSet<>()));
         assertEquals("user1", user.getName());
     }
 
@@ -52,8 +52,8 @@ class UserControllerTest {
     @DisplayName("Проверка валидации пользователя, если имя пустое")
     void shouldCreateUserIfNameIsEmpty() {
         User user = userController.create(
-                new User(null, new HashSet<>(), "user@gmail.com", "user1", "",
-                LocalDate.of(1985, 9,2)));
+                new User(null, "user@gmail.com", "user1", "",
+                LocalDate.of(1985, 9,2), new HashSet<>()));
         assertEquals("user1", user.getName());
     }
 
@@ -61,8 +61,8 @@ class UserControllerTest {
     @DisplayName("Проверка валидации пользователя, если в имени только пробел")
     void shouldCreateUserIfNameIsBlank() {
         User user = userController.create(
-                new User(null, new HashSet<>(), "user@gmail.com", "user1", " ",
-                LocalDate.of(1985, 9,2)));
+                new User(null, "user@gmail.com", "user1", " ",
+                LocalDate.of(1985, 9,2), new HashSet<>()));
         assertEquals("user1", user.getName());
     }
 
@@ -78,8 +78,8 @@ class UserControllerTest {
     @DisplayName("Проверка валидации пользователя, если логин null")
     void shouldViolationIfUserLoginIsNull() {
         User user = userController.create(
-                new User(null, new HashSet<>(), "user@gmail.com", null, "user",
-                LocalDate.of(1985, 9,2)));
+                new User(null, "user@gmail.com", null, "user",
+                LocalDate.of(1985, 9,2), new HashSet<>()));
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertFalse(violations.isEmpty());
     }
@@ -88,8 +88,8 @@ class UserControllerTest {
     @DisplayName("Проверка валидации пользователя, если в логине только пробел")
     void shouldViolationIfUserLoginIsBlank() {
         User user = userController.create(
-                new User(null, new HashSet<>(), "user@gmail.com", " ", "user",
-                LocalDate.of(1985, 9,2)));
+                new User(null, "user@gmail.com", " ", "user",
+                LocalDate.of(1985, 9,2), new HashSet<>()));
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertFalse(violations.isEmpty());
     }
@@ -98,8 +98,8 @@ class UserControllerTest {
     @DisplayName("Проверка валидации пользователя, если email null")
     void shouldViolationIfUserEmailIsNull() {
         User user = userController.create(
-                new User(null, new HashSet<>(),null, "user1", "user",
-                LocalDate.of(1985, 9,2)));
+                new User(null,null, "user1", "user",
+                LocalDate.of(1985, 9,2), new HashSet<>()));
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertFalse(violations.isEmpty());
     }
@@ -108,8 +108,8 @@ class UserControllerTest {
     @DisplayName("Проверка валидации пользователя, если email пустой")
     void shouldViolationIfUserEmailIs() {
         User user = userController.create(
-                new User(null, new HashSet<>(), "", "user1", "user",
-                LocalDate.of(1985, 9,2)));
+                new User(null, "", "user1", "user",
+                LocalDate.of(1985, 9,2), new HashSet<>()));
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertFalse(violations.isEmpty());
     }
@@ -118,8 +118,8 @@ class UserControllerTest {
     @DisplayName("Проверка валидации пользователя, если email некорректен")
     void shouldViolationIfUserEmailIsIncorrect() {
         User user = userController.create(
-                new User(null, new HashSet<>(),"user@", "user1", "user",
-                LocalDate.of(1985, 9,2)));
+                new User(null,"user@", "user1", "user",
+                LocalDate.of(1985, 9,2), new HashSet<>()));
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertFalse(violations.isEmpty());
     }
@@ -128,8 +128,8 @@ class UserControllerTest {
     @DisplayName("Проверка валидации пользователя, если дата рождения в будущем")
     void shouldViolationIfUserBirthdayInFuture() {
         User user = userController.create(
-                new User(null, new HashSet<>(),"user@gmail.com", "user1", "user",
-                LocalDate.of(2024, 1,1)));
+                new User(null,"user@gmail.com", "user1", "user",
+                LocalDate.of(2024, 1,1), new HashSet<>()));
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertEquals(1, violations.size());
     }
@@ -138,11 +138,11 @@ class UserControllerTest {
     @DisplayName("Проверка валидации пользователя при обновлении, если все поля User корректны")
     void shouldUpdateUser() {
         userController.create(
-                new User(null, new HashSet<>(),"user@gmail.com", "user1", "userName",
-                LocalDate.of(1985, 9,2)));
+                new User(null,"user@gmail.com", "user1", "userName",
+                LocalDate.of(1985, 9,2), new HashSet<>()));
         User user = userController.update(
-                new User(1, new HashSet<>(),"user@gmail.com", "alex", "Alex",
-                LocalDate.of(1985, 9,2)));
+                new User(1,"user@gmail.com", "alex", "Alex",
+                LocalDate.of(1985, 9,2), new HashSet<>()));
         assertEquals("alex", user.getLogin());
         assertEquals("Alex", user.getName());
         Set<ConstraintViolation<User>> violations = validator.validate(user);
@@ -153,13 +153,13 @@ class UserControllerTest {
     @DisplayName("Проверка валидации пользователя при обновлении, если User.id некорректен")
     void shouldThrowsWhenUpdatedUserWithIncorrectId() {
         userController.create(
-                new User(null, new HashSet<>(), "user@gmail.com", "user1", "userName",
-                LocalDate.of(1985, 9,2)));
+                new User(null, "user@gmail.com", "user1", "userName",
+                LocalDate.of(1985, 9,2), new HashSet<>()));
         final NotFoundException exp = assertThrows(
                 NotFoundException.class,
                 () ->  userController.update(
-                        new User(2, new HashSet<>(), "user@gmail.com", "alex", "Alex",
-                        LocalDate.of(1985, 9,2)))
+                        new User(2, "user@gmail.com", "alex", "Alex",
+                        LocalDate.of(1985, 9,2), new HashSet<>()))
         );
         assertEquals("Невозможно обновить пользователя c ID = null", exp.getMessage());
     }
@@ -168,13 +168,13 @@ class UserControllerTest {
     @DisplayName("Проверка валидации пользователя при обновлении, если User.id = null")
     void shouldThrowsWhenUpdatedUserWithIdEqualNull() {
         userController.create(
-                new User(null, new HashSet<>(), "user@gmail.com", "user1", "userName",
-                LocalDate.of(1985, 9,2)));
+                new User(null, "user@gmail.com", "user1", "userName",
+                LocalDate.of(1985, 9,2), new HashSet<>()));
         final NotFoundException exp = assertThrows(
                 NotFoundException.class,
                 () ->  userController.update(
-                        new User(null, new HashSet<>(), "user@gmail.com", "alex", "Alex",
-                        LocalDate.of(1985, 9,2)))
+                        new User(null, "user@gmail.com", "alex", "Alex",
+                        LocalDate.of(1985, 9,2), new HashSet<>()))
         );
         assertEquals("Невозможно обновить пользователя c ID = null", exp.getMessage());
     }
@@ -183,14 +183,14 @@ class UserControllerTest {
     @DisplayName("Проверка возврата списка созданных пользователей без ошибок валидации")
     void shouldGetListUsersWithoutViolations() {
         userController.create(
-                new User(null, new HashSet<>(), "user1@gmail.com", "user1", "userName",
-                LocalDate.of(1985, 9,2)));
+                new User(null, "user1@gmail.com", "user1", "userName",
+                LocalDate.of(1985, 9,2), new HashSet<>()));
         userController.create(
-                new User(null, new HashSet<>(), "user2@gmail.com", "user2", "userName",
-                LocalDate.of(1957, 11,10)));
+                new User(null, "user2@gmail.com", "user2", "userName",
+                LocalDate.of(1957, 11,10), new HashSet<>()));
         userController.create(
-                new User(null, new HashSet<>(), "user3@gmail.com", "user3", "userName",
-                LocalDate.of(1992, 5,17)));
+                new User(null, "user3@gmail.com", "user3", "userName",
+                LocalDate.of(1992, 5,17), new HashSet<>()));
 
         Optional<Set<ConstraintViolation<User>>> violationSet = userController.getUsers().stream()
                 .map(user -> validator.validate(user))
@@ -206,14 +206,14 @@ class UserControllerTest {
     @DisplayName("Проверка возврата списка пользователей с ошибками валидации")
     void shouldGetListUsersWithViolations() {
         userController.create(
-                new User(null, new HashSet<>(), "user1@gmail.com", " ", "userName",
-                LocalDate.of(1985, 9,2)));
+                new User(null, "user1@gmail.com", " ", "userName",
+                LocalDate.of(1985, 9,2), new HashSet<>()));
         userController.create(
-                new User(null, new HashSet<>(), "user2@gmail.com", "", "userName",
-                LocalDate.of(1957, 11,10)));
+                new User(null, "user2@gmail.com", "", "userName",
+                LocalDate.of(1957, 11,10), new HashSet<>()));
         userController.create(
-                new User(null, new HashSet<>(), "user3@", "user3", "userName",
-                LocalDate.of(1992, 5,17)));
+                new User(null, "user3@", "user3", "userName",
+                LocalDate.of(1992, 5,17), new HashSet<>()));
 
         Optional<Set<ConstraintViolation<User>>> violationSet = userController.getUsers().stream()
                 .map(user -> validator.validate(user))

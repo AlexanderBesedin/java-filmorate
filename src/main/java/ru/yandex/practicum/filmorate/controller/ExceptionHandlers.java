@@ -13,7 +13,7 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import javax.validation.ConstraintViolationException;
 import java.util.Map;
 
-@RestControllerAdvice ("ru.yandex.practicum.filmorate")
+@RestControllerAdvice
 @Slf4j
 public class ExceptionHandlers {
     @ExceptionHandler({MethodArgumentNotValidException.class, ConstraintViolationException.class,
@@ -31,9 +31,9 @@ public class ExceptionHandlers {
         return Map.of("error", e.getMessage());
     }
 
-    @ExceptionHandler(Throwable.class)
+    @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Map<String, String> handleServerError(Throwable e) {
+    public Map<String, String> handleServerError(Exception e) {
         log.debug("{} (ServerError): {}", e.getClass(), e.getMessage());
         return Map.of("error", e.getMessage());
     }

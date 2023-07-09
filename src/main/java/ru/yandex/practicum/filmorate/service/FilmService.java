@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.AlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
@@ -67,19 +66,7 @@ public class FilmService {
         return filmStorage.getFilms();
     }
 
-    public List<Film> getTopFilms(Integer count, Integer defaultValue) {
-        int countFilms = filmStorage.getFilms().size();
-
-        if (count.equals(defaultValue) && count > countFilms) {
-            log.info("Get {} popular films", countFilms);
-            return filmStorage.getTopFilms(countFilms);
-        }
-
-        if (count > countFilms) {
-            throw new ValidationException(
-                    "The count of films cannot be more than " + countFilms);
-        }
-
+    public List<Film> getTopFilms(Integer count) {
         log.info("Get {} popular films", count);
         return filmStorage.getTopFilms(count);
     }

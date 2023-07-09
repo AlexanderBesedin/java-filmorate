@@ -17,8 +17,6 @@ import java.util.List;
 public class FilmController {
     private final FilmService filmService;
 
-    private static final String DEFAULT_COUNT = "10";
-
     @PostMapping
     public Film create(@Valid @RequestBody Film film) {
         return filmService.create(film);
@@ -51,8 +49,7 @@ public class FilmController {
 
     @GetMapping("/popular")
     public List<Film> getTopFilms(
-            @Positive @RequestParam(value = "count", defaultValue = DEFAULT_COUNT) Integer count) {
-        Integer defaultValue = Integer.valueOf(DEFAULT_COUNT);
-        return filmService.getTopFilms(count, defaultValue);
+            @Positive @RequestParam(value = "count", defaultValue = "10") Integer count) {
+        return filmService.getTopFilms(count);
     }
 }

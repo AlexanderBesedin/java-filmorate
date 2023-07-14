@@ -24,7 +24,7 @@ public class DBFilmService {
     private final FilmLikesDao filmLikesDao;
 
     @Autowired
-    public DBFilmService(@Qualifier("FilmDbStorage") FilmDao filmDao, DBUserService userService,
+    public DBFilmService(@Qualifier("filmDaoImpl") FilmDao filmDao, DBUserService userService,
                          GenreDao genreDao, FilmLikesDao filmLikesDao) {
         this.filmDao = filmDao;
         this.userService = userService;

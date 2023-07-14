@@ -17,7 +17,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
-@Component("UserDbStorage")
+@Component("userDaoImpl")
 @RequiredArgsConstructor
 @Slf4j
 public class UserDaoImpl implements UserDao {
@@ -76,10 +76,12 @@ public class UserDaoImpl implements UserDao {
     }
 
     private User mapRowToUser(ResultSet rs, int rowNum) throws SQLException {
-        return new User(rs.getInt("id"),
-                rs.getString("email"),
-                rs.getString("login"),
-                rs.getString("name"),
-                rs.getDate("birthday").toLocalDate());
+        return User.builder()
+                .id(rs.getInt("id"))
+                .email(rs.getString("email"))
+                .login(rs.getString("login"))
+                .name(rs.getString("name"))
+                .birthday(rs.getDate("birthday").toLocalDate())
+                .build();
     }
 }

@@ -18,7 +18,8 @@ public class InMemoryFilmService {
     private final InMemoryUserService userService;
 
     @Autowired
-    public InMemoryFilmService(@Qualifier("FilmImStorage") FilmStorage filmStorage, InMemoryUserService userService) {
+    public InMemoryFilmService(@Qualifier("inMemoryFilmStorage") FilmStorage filmStorage,
+                               InMemoryUserService userService) {
         this.filmStorage = filmStorage;
         this.userService = userService;
     }

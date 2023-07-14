@@ -19,7 +19,7 @@ public class DBUserService {
     private final FriendDao friendDao;
 
     @Autowired
-    public DBUserService(@Qualifier("UserDbStorage") UserDao userDao, FriendDao friendDao) {
+    public DBUserService(@Qualifier("userDaoImpl") UserDao userDao, FriendDao friendDao) {
         this.userDao = userDao;
         this.friendDao = friendDao;
     }
@@ -74,6 +74,8 @@ public class DBUserService {
     }
 
     public List<User> getCommonFriends(Integer userId, Integer friendId) {
+        userDao.checkUserExist(userId);
+        userDao.checkUserExist(friendId);
         log.info("Get common friends of users with ID = {} and ID = {}", userId, friendId);
         return friendDao.getCommonFriends(userId, friendId);
     }

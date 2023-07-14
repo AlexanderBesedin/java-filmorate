@@ -7,7 +7,7 @@ import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Component("FilmImStorage")
+@Component("inMemoryFilmStorage")
 public class InMemoryFilmStorage implements FilmStorage {
     private final HashMap<Integer, Film> films = new HashMap<>();
     private Integer filmId = 1;

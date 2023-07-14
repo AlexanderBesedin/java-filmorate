@@ -8,6 +8,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.storage.dao.film.FilmDao;
 
@@ -17,8 +18,9 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
-@Component("FilmDbStorage")
+@Component("filmDaoImpl")
 @RequiredArgsConstructor
 public class FilmDaoImpl implements FilmDao {
     private final JdbcTemplate jdbcTemplate;
@@ -67,15 +69,13 @@ public class FilmDaoImpl implements FilmDao {
 
     @Override
     public List<Film> getFilms() {
-        String sqlQuery = "SELECT id, name, description, duration, releaseDate, mpa_id " +
-                "FROM films";
+        String sqlQuery = "SELECT * FROM films";
         return jdbcTemplate.query(sqlQuery, this::mapRowToFilm);
     }
 
     @Override
     public Film getById(Integer id) {
-        String sqlQuery = "SELECT id, name, description, duration, releaseDate, mpa_id " +
-                "FROM films WHERE id = ?";
+        String sqlQuery = "SELECT * FROM films WHERE id = ?";
         return jdbcTemplate.queryForObject(sqlQuery, this::mapRowToFilm, id);
     }
 
@@ -103,17 +103,27 @@ public class FilmDaoImpl implements FilmDao {
         String mpaName = "SELECT mpa_id, name FROM mpa WHERE mpa_id = ?";
         Mpa mpa = jdbcTemplate.queryForObject(mpaName, this::mapRowToMpa, mpaId);
 
-        return new Film(rs.getInt("id"),
-                rs.getString("name"),
-                rs.getString("description"),
-                rs.getInt("duration"),
-                rs.getDate("releaseDate").toLocalDate(),
-                mpa,
-                new HashSet<>()
-        );
+        int filmId = rs.getInt("id");
+        String sql = "SELECT genre_id, name FROM genres WHERE genre_id IN" +
+                "(SELECT genre_id FROM film_genres WHERE film_id = ?)";
+        Set<Genre> genres = new HashSet<>(jdbcTemplate.query(sql, this::mapRowToGenre, filmId));
+
+        return Film.builder()
+                .id(filmId)
+                .name(rs.getString("name"))
+                .description(rs.getString("description"))
+                .duration(rs.getInt("duration"))
+                .releaseDate(rs.getDate("releaseDate").toLocalDate())
+                .mpa(mpa)
+                .genres(genres)
+                .build();
     }
 
     private Mpa mapRowToMpa(ResultSet rs, int rowNum) throws SQLException {
         return new Mpa(rs.getInt("mpa_id"), rs.getString("name"));
+    }
+
+    private Genre mapRowToGenre(ResultSet rs, int rowNum) throws SQLException {
+        return new Genre(rs.getInt("genre_id"), rs.getString("name"));
     }
 }

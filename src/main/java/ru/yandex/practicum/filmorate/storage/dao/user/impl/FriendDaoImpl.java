@@ -49,11 +49,15 @@ public class FriendDaoImpl implements FriendDao {
     private List<User> getUsersFromRowSet(SqlRowSet rs) {
         List<User> users = new ArrayList<>();
         while (rs.next()) {
-            users.add(new User(rs.getInt("id"),
-                    rs.getString("email"),
-                    rs.getString("login"),
-                    rs.getString("name"),
-                    Objects.requireNonNull(rs.getDate("birthday")).toLocalDate()));
+            users.add(
+                    User.builder()
+                        .id(rs.getInt("id"))
+                        .email(rs.getString("email"))
+                        .login(rs.getString("login"))
+                        .name(rs.getString("name"))
+                        .birthday(Objects.requireNonNull(rs.getDate("birthday")).toLocalDate())
+                        .build()
+            );
         }
         return users;
     }

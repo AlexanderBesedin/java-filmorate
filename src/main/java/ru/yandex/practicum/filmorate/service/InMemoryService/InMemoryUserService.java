@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class InMemoryUserService {
     private final UserStorage userStorage;
 
-    public InMemoryUserService(@Qualifier("UserImStorage") UserStorage userStorage) {
+    public InMemoryUserService(@Qualifier("inMemoryUserStorage") UserStorage userStorage) {
         this.userStorage = userStorage;
     }
 

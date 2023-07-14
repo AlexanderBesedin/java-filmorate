@@ -4,10 +4,12 @@ import lombok.*;
 import ru.yandex.practicum.filmorate.validator.IsAfterDate;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -29,6 +31,19 @@ public class Film {
     private int duration;
     @IsAfterDate(value = "1895-12-28", message = "Дата релиза не может быть ранее 1895-12-28")
     private LocalDate releaseDate;
+    @NotNull
+    private Mpa mpa;
+    private Set<Genre> genres;
     @Setter(AccessLevel.NONE)
     private Set<Integer> likes = new HashSet<>();
+
+    public Film(Integer id, String name, String description, int duration, LocalDate releaseDate, Mpa mpa, Set<Genre> genres) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.duration = duration;
+        this.releaseDate = releaseDate;
+        this.mpa = mpa;
+        this.genres = genres;
+    }
 }

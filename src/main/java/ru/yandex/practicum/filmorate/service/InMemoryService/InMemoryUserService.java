@@ -1,7 +1,7 @@
-package ru.yandex.practicum.filmorate.service;
+package ru.yandex.practicum.filmorate.service.InMemoryService;
 
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.AlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
@@ -9,12 +9,16 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
 @Slf4j
-public class UserService {
+public class InMemoryUserService {
     private final UserStorage userStorage;
+
+    public InMemoryUserService(@Qualifier("UserImStorage") UserStorage userStorage) {
+        this.userStorage = userStorage;
+    }
 
     public User create(User user) {
         if (user.getName() == null || user.getName().isBlank()) user.setName(user.getLogin());
@@ -74,7 +78,10 @@ public class UserService {
             throw new NotFoundException(String.format("User ID = %d does not exist", id));
         }
         log.info("Get friends of the user with ID= {}", id);
-        return userStorage.getUserFriends(id);
+        return getUser(id).getFriends()
+                .stream()
+                .map(this::getUser)
+                .collect(Collectors.toList());
     }
 
     public List<User> getCommonFriends(Integer userId, Integer friendId) {

@@ -1,8 +1,6 @@
 # Filmorate
 ### Бэкенд приложения для поиска фильмов и сериалов
 
----
-
 **Основные объекты взаимодействия:**
 <br>• Пользователи
 <br>• Фильмы
@@ -27,10 +25,11 @@
 <br>• Получить список всех фильмов
 <br>• Добавить лайк конкретному фильму
 <br>• Удалить лайк у конкретного фильма
-<br>• Получить топ-фильмов, с возможностью указания из количества
+<br>• Получить топ-фильмов, с возможностью указания их количества
 <br>• Получить список всех жанров фильмов, доступных в сервисе
 <br>• Получить список всех возрастных рейтингов фильмов, доступных в сервисе
----
+
+
 ## Взаимосвязи объектов БД (базы данных)
 
 ![Java-filmorate project DB](src/main/resources/filmorate_DB.png)
@@ -40,7 +39,7 @@
 <details>
   <summary>Получить пользователя с id = 5</summary>
 
-```sql
+```roomsql
 SELECT *
 FROM users
 WHERE id = 5;
@@ -51,7 +50,7 @@ WHERE id = 5;
 <details>
   <summary>Получить список всех друзей пользователя с id = 5 </summary>
 
-```sql
+```roomsql
 SELECT *
 FROM users
 WHERE id IN 
@@ -65,7 +64,7 @@ WHERE id IN
 <details>
   <summary>Получить фильм с id = 3</summary>
 
-```sql
+```roomsql
 SELECT *
 FROM films
 WHERE film_id = 3;
@@ -76,11 +75,11 @@ WHERE film_id = 3;
 <details>
   <summary>Получить ТОП-10 фильмов</summary>
 
-```sql
-"SELECT f.name AS topfilms
+```roomsql
+SELECT f.name AS topfilms
 FROM films AS f
 LEFT JOIN film_likes AS lk ON f.id = lk.film_id
-GROUP BY topfilms ORDER BY COUNT(lk.user_id) DESC LIMIT 10"
+GROUP BY topfilms ORDER BY COUNT(lk.user_id) DESC LIMIT 10;
 ```
 
 </details>

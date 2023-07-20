@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.service.DBFilmService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -51,5 +52,10 @@ public class FilmController {
     public List<Film> getTopFilms(
             @Positive @RequestParam(value = "count", defaultValue = "10") Integer count) {
         return filmService.getTopFilms(count);
+    }
+
+    @GetMapping("/common") //?userId={userId}&friendId={friendId}
+    public List<Film> getCommonFilms(@RequestParam("userId") Integer userId, @RequestParam("friendId") Integer id) {
+        return filmService.getCommonFilms(userId, id);
     }
 }
